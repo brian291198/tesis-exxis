@@ -28,20 +28,11 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('/home', [HomeController::class, 'retornarHome'])->name('retornarHome');
     
-    /* ASESORES */
-    Route::resource('advisors', AdvisorController::class)->names('asesores');
-    Route::get('/advisors', [AdvisorController::class, 'index'])->name('advisors.index');
-    Route::get('/asesores', [AdvisorController::class, 'index'])->name('asesores.index');
-    /* CLIENTES */
-    Route::resource('customers', CustomerController::class)->names('clientes');
+
+ 
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
     Route::resource('roles',RolController::class)->names('roles');
 
-    
-    Route::resource('activities',ActivityController::class)->names('actividades');;
-
-    Route::resource('projects', ProjectController::class);
-    Route::get('/users/by-area', [ProjectController::class, 'getUsersByArea'])->name('users.by.area');
 
 
 
