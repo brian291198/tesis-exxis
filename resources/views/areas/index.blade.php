@@ -104,16 +104,16 @@
             @else
                 @foreach ($areas as $key => $a)
                     <tr class="text-center">
-                        <td data-toggle="modal" data-target="#showClienteModal{{$a->area_id}}">{{($areas->currentPage() - 1) * $areas->perPage() + $loop->index + 1}}</td>
-                        <td data-toggle="modal" data-target="#showClienteModal{{$a->area_id}}">{{$a->area_id}} </td>
-                        <td class="text-left" data-toggle="modal" data-target="#showClienteModal{{$a->area_id}}">{{$a->nombre}} </td>
+                        <td data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{($areas->currentPage() - 1) * $areas->perPage() + $loop->index + 1}}</td>
+                        <td data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{$a->area_id}} </td>
+                        <td class="text-left" data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{$a->nombre}} </td>
    
-                        @can('Editar areas')
+                 
                         <td class="text-center" style="display: flex; justify-content: center; align-items: center;">
                         
-                            <button class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#showClienteModal{{$a->area_id}}"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}"><i class="fas fa-eye"></i></button>
                                              
-                            <button class="btn btn-warning btn-sm mx-2" type="button"  data-toggle="modal" data-target="#editClienteModal{{$a->area_id}}" ><i class="far fa-user"></i></button>
+                            <button class="btn btn-warning btn-sm mx-2" type="button"  data-toggle="modal" data-target="#editAreaModal{{$a->area_id}}" ><i class="far fa-user"></i></button>
                                               
                             <form action="{{route('areas.destroy',$a->area_id)}}" method="POST" class="formulario-eliminar">
                                 @csrf
@@ -129,7 +129,7 @@
                         @include('areas.modal.show')
                         @include('areas.modal.edit')
 
-                        @endcan
+                    
                         </tr>
                         
                     @endforeach

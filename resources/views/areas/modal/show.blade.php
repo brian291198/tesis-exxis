@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="showAreaModal{{$a->id}}">
+<div class="modal fade" tabindex="-1" role="dialog" id="showAreaModal{{$a->area_id}}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p><strong>ID del Área:</strong> {{ $a->id }}</p>
+                <p><strong>ID del Área:</strong> {{ $a->area_id }}</p>
                 <p><strong>Nombre del Área:</strong> {{ $a->nombre }}</p>
             </div>
             <div class="modal-footer bg-whitesmoke br">
