@@ -48,23 +48,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function advisors()
-    {
-        return $this->hasOne(Advisor::class);
-    }
 
-    public function areas()
-    {
-        return $this->belongsToMany(Area::class, 'area_user');
-    }
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
 
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class, 'project_user');
-    }
 }

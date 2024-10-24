@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>@yield('title', 'JP Consultoría')</title>
+  <title>@yield('title', 'Sistema de Cobranza')</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="{{ asset('backend/assets/modules/bootstrap/css/bootstrap.min.css') }}">
@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="{{ asset('backend/assets/modules/weather-icon/css/weather-icons.min.css')}}">
   <link rel="stylesheet" href="{{ asset('backend/assets/modules/weather-icon/css/weather-icons-wind.min.css')}}">
   <link rel="stylesheet" href="{{ asset('backend/assets/modules/summernote/summernote-bs4.css')}}">
+
   
   {{-- Sweet Alert --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -26,7 +27,7 @@
   <link rel="stylesheet" href="{{ asset('backend/assets/css/style.css')}}">
   <link rel="stylesheet" href="{{ asset('backend/assets/css/components.css')}}">
   <!-- Logo de empresa -->
-  <link rel="icon" href="{{ asset('img/jpconsultoria_logo.ico') }}" type="image/x-icon">
+ {{--  <link rel="icon" href="{{ asset('img/jpconsultoria_logo.ico') }}" type="image/x-icon"> --}}
   <!-- ficon bootstrap-->
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -88,94 +89,83 @@
         </ul>
       </nav>
       <div class="main-sidebar sidebar-style-2">
-        <aside id="sidebar-wrapper">
+        <aside id="sidebar-wrapper">|
           <div class="sidebar-brand">
-            <a href="index.html">JP Consultoría</a>
+            <a href="index.html">EXXIS GROUP</a>
           </div>
           <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">JP</a>
+            <a href="index.html">EXXIS</a>
           </div>
           <ul class="sidebar-menu">
             @can('Ver submenú de dashboards')
-            <li class="menu-header">Dashboard</li>
+
             <li class="dropdown">
               <a href="#" class="nav-link has-dropdown"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
               <ul class="dropdown-menu">
-                @can('Ver dashboard general')
-                <li><a class="nav-link" href="#">Dashboard General </a></li>
-                @endcan
-                @can('Ver dashboard de asesores')
-                <li><a class="nav-link" href="#">Dashboard de Asesores</a></li>
-                @endcan
+      {{--           @can('Ver dashboard general') --}}
+                <li><a class="nav-link" href="{{route('dashboard.index')}}">Dashboard General </a></li>
+               {{--  @endcan --}}
+ 
               </ul>
             </li>
             @endcan
             @can('Ver submenú de usuario')                          
-              <li class="menu-header">Accesos</li>
+           
               <li class="dropdown">
-                <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Usuarios</span></a>
+                <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Accesos</span></a>
                 
                 
                 <ul class="dropdown-menu">
                   @can('Ver lista de usuarios')
-                  <li><a class="nav-link" href="{{route('usuarios.index')}}">Lista de usuarios</a></li>
+                  <li><a class="nav-link" href="{{route('usuarios.index')}}">Usuarios</a></li>
                   @endcan 
-                  @can('Crear usuarios')
-                  <li><a class="nav-link" href="{{route('usuarios.create')}}">Crear nuevo usuario</a></li>
+                  @can('Ver lista de roles')
+                  <li><a class="nav-link" href="{{route('roles.index')}}">Roles</a></li>
                   @endcan
                 </ul>
                 
                 </li>
 
-
             @endcan
             
-              @can('Ver submenú de roles')
             <li class="dropdown">
-              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="bi bi-briefcase"></i><span>Roles</span></a>
+              <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Administración</span></a>
               <ul class="dropdown-menu">
-                @can('Ver lista de roles')
-                <li><a class="nav-link" href="{{route('roles.index')}}">Lista de roles</a></li>
-                @endcan 
-                @can('Crear roles')
-                <li><a class="nav-link" href="{{route('roles.create')}}">Crear nuevo rol</a></li>
-                @endcan 
+                <li><a class="nav-link" href="{{route('areas.index')}}">Areas</a></li>
+                <li><a class="nav-link" href="{{route('clientes.index')}}">Clientes</a></li>
+                <li><a class="nav-link" href="{{route('facturas.index')}}">Facturas</a></li>
+                <li><a class="nav-link" href="{{route('periodos.index')}}">Periodos</a></li>
+           
               </ul>
-            </li>
-            @endcan 
-            @can('Ver submenú de asesores')
-              <li class="menu-header">Administración</li>
-              <li class="dropdown">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="bi bi-people"></i><span>Asesores</span></a>
-                <ul class="dropdown-menu">
-                  @can('Ver lista de asesores')
-                  <li><a class="nav-link" href="{{route('asesores.index')}}">Lista de asesores</a></li>
-                  @endcan
-                </ul> 
+              
               </li>
-            @endcan
-            @can('Ver submenú de clientes')
-              <li class="menu-header">Clientes</li>
+
               <li class="dropdown">
-              <a href="#" class="nav-link has-dropdown"><i class="bi bi-person-check"></i><span>Clientes</span></a>
-              <ul class="dropdown-menu">
-                @can('Ver lista de clientes')
-                <li><a class="nav-link" href="{{route('clientes.index')}}">Lista de Clientes</a></li>
-                @endcan
-              </ul>
-            </li>
-            @endcan
-            @can('Ver submenú de clientes')
-              <li class="menu-header">Proyectos</li>
+                <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Cobranzas</span></a>
+                <ul class="dropdown-menu">
+                  <li><a class="nav-link" href="{{route('facturas.index')}}">Clientes Morosos</a></li>
+                  <li><a class="nav-link" href="{{route('periodos.index')}}">Histórico de Pagos</a></li>
+                </ul>
+                
+              </li>
+
               <li class="dropdown">
-              <a href="#" class="nav-link has-dropdown"><i class="bi bi-person-check"></i><span>Proyectos</span></a>
-              <ul class="dropdown-menu">
-                @can('Ver lista de clientes')
-                <li><a class="nav-link" href="{{route('projects.index')}}">Lista de Proyectos</a></li>
-                @endcan
-              </ul>
-            </li>
-            @endcan
+                <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Automatización</span></a>
+                <ul class="dropdown-menu">
+                  <li><a class="nav-link" href="{{route('clientes.index')}}">Notificaciones</a></li>
+                </ul>
+                
+              </li>
+
+              <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown" ><i class="bi bi-person-gear"></i><span>Reportes</span></a>
+                <ul class="dropdown-menu">
+                  <li><a class="nav-link" href="{{route('clientes.index')}}">Reporte General</a></li>
+                </ul>
+                
+              </li>
+
+              
           {{--   @can('')
               <li class="menu-header">Espacio de trabajo</li>
               <li class="dropdown">
@@ -198,8 +188,8 @@
          </ul>
 
           <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <a href="" class="btn btn-primary btn-lg btn-block btn-icon-split">
-              <i class="fas fa-rocket"></i> Nuevo proyecto
+            <a href="{{route('importExcel.index')}}" class="btn btn-primary btn-lg btn-block btn-icon-split">
+              <i class="fas fa-rocket"></i> Importar Datos
             </a>
           </div>        
         
@@ -213,7 +203,7 @@
       
       <footer class="main-footer">
         <div class="footer-left">
-          Copyright &copy; 2024 <div class="bullet"></div> Team UNT <i class="bi bi-heart"></i></a>
+          Copyright &copy; 2024 <div class="bullet"></div> Team Tesis II <i class="bi bi-heart"></i></a>
         </div>
         <div class="footer-right">
           
@@ -244,6 +234,8 @@
         });
     });
 </script>
+
+<script src="assets/js/page/modules-datatables.js"></script>
 
   <!-- General JS Scripts -->
   <script src="{{ asset('backend/assets/modules/jquery.min.js')}}"></script>

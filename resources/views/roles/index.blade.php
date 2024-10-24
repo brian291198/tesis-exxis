@@ -8,7 +8,7 @@
         <div class="section-body">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card table-responsive">
+                    <div class="card">
                         <div class="card-body">
                             <div class="card">
                                 <div class="card-header">
@@ -36,7 +36,8 @@
                             </div>
 {{-- Definimos las directivas de laravel permission --}}
                               
-                               
+                              <div class="table-responsive">
+
                             <table class="table table-hover">
 
 
@@ -68,6 +69,7 @@
                                         @endforeach
                                     </tbody>
                             </table>
+                        </div>
                             <div class="pagination justify-content-end" style="margin: 20px 0;">
                                 {!! $roles->links() !!}
                             </div>

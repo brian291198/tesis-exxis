@@ -46,7 +46,7 @@ class FortifyServiceProvider extends ServiceProvider
                 return $user;
             }
         });
-    
+
 
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
@@ -67,8 +67,8 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.auth-login');
         });
 
-        Fortify::registerView(function(){
+        /* Fortify::registerView(function(){
             return view('auth.auth-register');
-        });
+        }); */
     }
 }

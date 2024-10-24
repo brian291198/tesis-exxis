@@ -9,12 +9,17 @@
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "spatie/laravel-permission": "^6.9"
+        "phpoffice/phpspreadsheet": "^2.3",
+        "spatie/laravel-permission": "^6.9",
+        "yajra/laravel-datatables": "^11.0",
+        "yajra/laravel-datatables-export": "^11.3",
+        "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
+        "laravel/ui": "^4.5",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
         "phpunit/phpunit": "^11.0.1"

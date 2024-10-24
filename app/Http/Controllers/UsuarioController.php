@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 //Agregamos
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Advisor;
+/* use App\Models\Advisor; */
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -95,14 +95,14 @@ class UsuarioController extends Controller
     $user->assignRole($roles);
 
     // Verificar si el rol "Asesor" está en los roles asignados
-    if (in_array('Asesor', $roles)) {
+   /*  if (in_array('Asesor', $roles)) {
         // Guardar en la tabla advisors
         Advisor::create([
             'user_id' => $user->id,
             'nombres' => $user->name,
             'email' => $user->email
         ]);
-    }
+    } */
 
     // Redireccionar a la ruta de index de usuarios
     return redirect()->route('usuarios.index')->with('mensaje', 'Usuario creado exitosamente');
@@ -243,7 +243,7 @@ class UsuarioController extends Controller
     $user = User::findOrFail($id);
     
     // Elimina los asesores relacionados
-    Advisor::where('user_id', $id)->delete();
+    /* Advisor::where('user_id', $id)->delete(); */
     
     // Elimina el usuario
     $user->delete();

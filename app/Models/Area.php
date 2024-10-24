@@ -8,17 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Area extends Model
 {
     use HasFactory;
-
+    protected $table = 'areas';
+    protected $primaryKey = 'area_id';
+    public $timestamps = true;
     protected $fillable = ['nombre'];
 
-    public function projects()
+    public function periodos()
     {
-        return $this->hasMany(Project::class);
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'area_user');
+        return $this->hasMany(Periodo::class, 'area_id');
     }
 }
-

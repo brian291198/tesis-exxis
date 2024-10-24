@@ -103,7 +103,7 @@
               Don't have an account? <a href="auth-register.html">Create One</a>
             </div> --}}
             <div class="simple-footer">
-              Copyright &copy; Team UNT 2024
+              Copyright &copy; Team Tesis II 2024
             </div>
           </div>
         </div>
