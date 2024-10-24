@@ -97,7 +97,7 @@
             <a href="index.html">EXXIS</a>
           </div>
           <ul class="sidebar-menu">
-            @can('Ver submenú de dashboards')
+
 
             <li class="dropdown">
               <a href="#" class="nav-link has-dropdown"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a>
@@ -108,7 +108,7 @@
  
               </ul>
             </li>
-            @endcan
+     
             @can('Ver submenú de usuario')                          
            
               <li class="dropdown">
