@@ -1,15 +1,19 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="showFacturaModal{{$f->factura_id}}">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog " role="document"> <!-- Modal más grande -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Detalles de la Factura</h5>
+                <h5 class="modal-title text-center">Detalles de la Factura</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                
             </div>
-            <div class="modal-body">
+            <div class="dropdown-divider"></div>
+            <div class="modal-body" style="max-height: 500px; overflow-y: auto;"> <!-- Scroll en el cuerpo del modal -->
+            
                 <p><strong>ID de Factura:</strong> {{ $f->factura_id }}</p>
                 <p><strong>Fecha de Factura:</strong> {{ $f->fecha_factura }}</p>
+                <p><strong>Cantidad de Cuotas:</strong> {{ $f->num_cuotas }}</p>
                 <p><strong>Saldo Pendiente:</strong> {{ $f->saldo_pendiente }}</p>
                 <p><strong>Nombre del Cliente:</strong> {{ $f->cliente->nombre }}</p>
                 <p><strong>Concepto:</strong> 
@@ -33,8 +37,47 @@
                     <strong class="text-success">No tiene</strong>
                     @endif
                 </p>
-                {{-- <p><strong>Tipo de Cambio ID:</strong> {{ $f->tipoCambio->valor }}</p> --}}
+                <div class="dropdown-divider"></div>
+               <!-- Tabla de Periodos Relacionados -->
+               <h5 class="mt-4 text-center">Periodos Relacionados</h5>
+                    <ul style="list-style-type: none;">
+                        <div class="d-flex justify-content-around align-items-center">
+                            <li><strong>ID</strong></li>
+                            <li><strong>Cuota</strong></li>
+                            <li><strong>Fecha Vencimiento</strong></li>
+                            <li><strong>Monto</strong></li>   
+                        </div>
+                        @foreach ($f->periodos as $periodo)
+                        <div class="d-flex justify-content-between align-items-center">
+                            <li class="flex-fill text-center">{{ $periodo->periodo_id }}</li>
+                            <li class="flex-fill text-center">{{ $periodo->numero }}</li>
+                            <li class="flex-fill text-center">{{ $periodo->fecha_vencimiento }}</li>
+                            <li class="flex-fill text-center">{{ $periodo->monto }}</li>
+                        </div>
+                        @endforeach
+                    </ul>
+                    <h5 class="mt-4 text-center">Comentarios de la Factura</h5>
+                    <div class="row">
+                        @foreach ($f->comentariosFactura as $comentario)
+                        <div class="col-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="card-title mb-1">{{ $comentario->usuario }}</h6>
+                                        <small class="text-muted">{{ $comentario->fecha->format('d/m/Y') }}</small>
+                                    </div>
+                                    <p class="card-text">{{ $comentario->description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+
             </div>
+
+          
+
             <div class="modal-footer bg-whitesmoke br justify-content-center">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
             </div>

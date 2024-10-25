@@ -11,7 +11,7 @@ class Factura extends Model
     protected $table = 'facturas';
     protected $primaryKey = 'factura_id';
     public $incrementing = false;
-    protected $fillable = ['factura_id', 'fecha_factura', 'saldo_pendiente', 'concepto', 'cliente_id', 'carta_notarial', 'tipo_id', 'fecha_vencimiento', 'descripcion', 'servicio'];
+    protected $fillable = ['factura_id', 'fecha_factura', 'num_cuotas','saldo_pendiente', 'concepto', 'cliente_id', 'carta_notarial', 'tipo_id', 'fecha_vencimiento', 'descripcion', 'servicio'];
 
     public function cliente()
     {

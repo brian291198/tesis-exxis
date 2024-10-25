@@ -76,7 +76,8 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nº Folio</th>
+                        <th>ID Factura</th>
+                        <th>Número de Cuotas</th>
                         <th>Saldo Pendiente</th>
                         <th>Fecha de Factura</th>
                         <th>Fecha de Vencimiento</th>
@@ -87,6 +88,7 @@
                     @foreach ($facturas as $factura)
                         <tr>
                             <td>{{ $factura['factura_id'] }}</td>
+                            <td>{{ $factura['num_cuotas'] }}</td>
                             <td>{{ $factura['saldo_pendiente'] }}</td>
                             <td>{{ $factura['fecha_factura'] }}</td>
                             <td>{{ $factura['fecha_vencimiento'] }}</td>
@@ -101,7 +103,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nº Factura</th>
+                        <th>ID Factura</th>
                         <th>Cuota</th>
                         <th>Fecha de Vencimiento</th>
                         <th>Monto</th>

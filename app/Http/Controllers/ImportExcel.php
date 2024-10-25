@@ -24,185 +24,161 @@ class ImportExcel extends Controller
 
 
 
-public function save(Request $request)
-        {
-            try {
-                // Decodificar los datos JSON a arrays, asegurando que no sean null
-                $clientes = $request->input('clientes') ? array_map('json_decode', $request->input('clientes')) : [];
-                $facturas = $request->input('facturas') ? array_map('json_decode', $request->input('facturas')) : [];
-                $periodos = $request->input('periodos') ? array_map('json_decode', $request->input('periodos')) : [];
-                
-                // Guardar clientes
-                foreach ($clientes as $cliente) {
-                    Cliente::updateOrCreate(
-                        ['cliente_id' => $cliente->cliente_id],
-                        ['nombre' => $cliente->nombre]
-                    );
-                }
-            
-                // Guardar facturas
-                foreach ($facturas as $factura) {
-                    Factura::updateOrCreate(
-                        ['factura_id' => $factura->factura_id],
-                        [
-                            'saldo_pendiente' => $factura->saldo_pendiente,
-                            'cliente_id' => $factura->cliente_id,
-                            'fecha_factura' => $factura->fecha_factura,
-                            'fecha_vencimiento' => $factura->fecha_vencimiento
-                        ]
-                    );
-                }
-                
-                // Guardar periodos
-                foreach ($periodos as $periodo) {
-                    Periodo::create([
-                        'factura_id' => $periodo->factura_id,
-                        'numero' => $periodo->numero,
-                        'fecha_vencimiento' => $periodo->fecha_vencimiento,
-                        'monto' => $periodo->monto
-                    ]);
-                }
+    public function save(Request $request)
+{
+    try {
+        // Decodificar los datos JSON a arrays, asegurando que no sean null
+        $clientes = $request->input('clientes') ? array_map('json_decode', $request->input('clientes')) : [];
+        $facturas = $request->input('facturas') ? array_map('json_decode', $request->input('facturas')) : [];
+        $periodos = $request->input('periodos') ? array_map('json_decode', $request->input('periodos')) : [];
         
-                return redirect()->route('import.index')->with('success', 'Datos guardados exitosamente');
-            } catch (QueryException $e) {
-                // Manejo genérico de excepciones
-                return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
-            } catch (TypeError $e) {
-                return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, inténtelo de nuevo.');
-            }
+        // Guardar clientes
+        foreach ($clientes as $cliente) {
+            Cliente::updateOrCreate(
+                ['cliente_id' => $cliente->cliente_id],
+                ['nombre' => $cliente->nombre]
+            );
         }
+
+        // Guardar facturas con `num_cuotas` incluido
+        foreach ($facturas as $factura) {
+            Factura::updateOrCreate(
+                ['factura_id' => $factura->factura_id],
+                [   
+                    'saldo_pendiente' => $factura->saldo_pendiente,
+                    'cliente_id' => $factura->cliente_id,
+                    'fecha_factura' => $factura->fecha_factura,
+                    'fecha_vencimiento' => $factura->fecha_vencimiento,
+                    'num_cuotas' => $factura->num_cuotas
+
+                ]
+            );
+        }
+
+        // Guardar periodos
+        foreach ($periodos as $periodo) {
+            Periodo::create([
+                'factura_id' => $periodo->factura_id,
+                'numero' => $periodo->numero,
+                'fecha_vencimiento' => $periodo->fecha_vencimiento,
+                'monto' => $periodo->monto
+            ]);
+        }
+
+        return redirect()->route('import.index')->with('success', 'Datos guardados exitosamente');
+    } catch (QueryException $e) {
+        return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
+    } catch (TypeError $e) {
+        return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, inténtelo de nuevo.');
+    }
+}
+
+    
         
 
     
 
-public function preview(Request $request)
-{
-    try {
-        // Validar el archivo
-        $rules = [
-            'excel_file' => 'required|file|mimes:xlsx,xls',
-        ];
-
-        // Validar el archivo con el validador manual
-        $validator = Validator::make($request->all(), $rules);
-
-        // Si la validación falla, redirigir a index con mensaje de error
-        if ($validator->fails()) {
-            return redirect()->route('import.index')
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'El archivo subido no es válido. Solo se permiten archivos Excel (.xlsx, .xls)');
-        }
-
-        // Cargar el archivo Excel
-        $file = $request->file('excel_file');
-        $spreadsheet = IOFactory::load($file->getPathname());
-
-        // Obtener la primera hoja del archivo
-        $sheet = $spreadsheet->getActiveSheet();
-        $data = $sheet->toArray();
-
-        // Inicializar las tablas
-        $clientes = [];
-        $facturasMap = [];
-        $periodos = [];
-        $currentCliente = null;
-
-        // Obtener registros existentes de la tabla periodos
-        $existingRecords = DB::table('periodos') // Cambiar a la tabla periodos
-            ->select('factura_id', 'numero')
-            ->get();
-
-        // Obtener registros existentes de la tabla clientes
-        $existingClientes = DB::table('clientes') // Cambiar a la tabla clientes
-            ->select('cliente_id')
-            ->pluck('cliente_id') // Obtener solo los IDs de clientes
-            ->toArray();
-
-        // Procesar filas de la hoja
-        for ($i = 1; $i < count($data); $i++) {
-            $row = $data[$i];
-
-            // Verificar si la fila es un cliente
-            if (!empty($row[0]) && !empty($row[1]) && empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) && empty($row[6]) && empty($row[7]) && !empty($row[8])) {
-                // Guardar cliente previo si existe
-                if ($currentCliente) {
-                    // Verificar si el cliente ya está registrado
-                    if (!in_array($currentCliente['cliente_id'], $existingClientes)) {
-                        $clientes[] = $currentCliente; // Solo agregar si no está en clientes existentes
-                    }
-                }
-
-                // Crear nuevo cliente
-                $currentCliente = [
-                    'cliente_id' => $row[0], // Código cliente
-                    'nombre' => $row[1],     // Nombre cliente
+        public function preview(Request $request)
+        {
+            try {
+                // Validar el archivo
+                $rules = [
+                    'excel_file' => 'required|file|mimes:xlsx,xls',
                 ];
-                continue;
-            }
-
-            // Si es una fila de factura y el número de factura no está vacío
-            if ($currentCliente && !empty($row[3])) {
-                $factura_id = $row[3]; // N° folio
-                $numero = $row[4]; // Cuotas
-                $saldo_vencido = floatval(str_replace(['USD ', ','], '', $row[8])) ?: 0;
-
-                // Verificar si la combinación ya existe en la tabla periodos
-                $exists = $existingRecords->contains(function ($item) use ($factura_id, $numero) {
-                    return $item->factura_id == $factura_id && $item->numero == $numero;
-                });
-
-                // Solo procesar si la combinación no existe
-                if (!$exists) {
-                    // Agregar factura al mapa
-                    if (!isset($facturasMap[$factura_id])) {
-                        $facturasMap[$factura_id] = [
-                            'factura_id' => $factura_id,
-                            'saldo_pendiente' => 0,
-                            'cliente_id' => $currentCliente['cliente_id'],
-                            'fecha_factura' => $this->formatDate($row[5]),
-                            'fecha_vencimiento' => null // Inicialmente nulo
-                        ];
-                    }
-
-                    // Acumular saldo pendiente
-                    $facturasMap[$factura_id]['saldo_pendiente'] += $saldo_vencido;
-
-                    // Determinar la fecha de vencimiento de la factura basado en el máximo número de cuota
-                    if (is_null($facturasMap[$factura_id]['fecha_vencimiento']) || $numero > $facturasMap[$factura_id]['fecha_vencimiento']) {
-                        $facturasMap[$factura_id]['fecha_vencimiento'] = $this->formatDate($row[6]); // Fecha de vencimiento de la factura
-                    }
-
-                    // Agregar periodo con su fecha de vencimiento específica
-                    $periodos[] = [
-                        'factura_id' => $factura_id,
-                        'numero' => $numero,
-                        'fecha_vencimiento' => $this->formatDate($row[6]), // Fecha de vencimiento del periodo
-                        'monto' => $saldo_vencido
-                    ];
+        
+                $validator = Validator::make($request->all(), $rules);
+        
+                if ($validator->fails()) {
+                    return redirect()->route('import.index')
+                        ->withErrors($validator)
+                        ->withInput()
+                        ->with('error', 'El archivo subido no es válido. Solo se permiten archivos Excel (.xlsx, .xls)');
                 }
+        
+                // Cargar el archivo Excel
+                $file = $request->file('excel_file');
+                $spreadsheet = IOFactory::load($file->getPathname());
+                $sheet = $spreadsheet->getActiveSheet();
+                $data = $sheet->toArray();
+        
+                // Inicializar las tablas
+                $clientes = [];
+                $facturasMap = [];
+                $periodos = [];
+                $currentCliente = null;
+        
+                // Obtener registros existentes
+                $existingRecords = DB::table('periodos')->select('factura_id', 'numero')->get();
+                $existingClientes = DB::table('clientes')->select('cliente_id')->pluck('cliente_id')->toArray();
+        
+                // Procesar filas de la hoja
+                for ($i = 1; $i < count($data); $i++) {
+                    $row = $data[$i];
+        
+                    if (!empty($row[0]) && !empty($row[1]) && empty($row[2]) && empty($row[3]) && empty($row[4]) && empty($row[5]) && empty($row[6]) && empty($row[7]) && !empty($row[8])) {
+                        if ($currentCliente && !in_array($currentCliente['cliente_id'], $existingClientes)) {
+                            $clientes[] = $currentCliente;
+                        }
+                        $currentCliente = [
+                            'cliente_id' => $row[0],
+                            'nombre' => $row[1],
+                        ];
+                        continue;
+                    }
+        
+                    if ($currentCliente && !empty($row[3])) {
+                        $factura_id = $row[3];
+                        $numero = $row[4];
+                        $saldo_vencido = floatval(str_replace(['USD ', ','], '', $row[8])) ?: 0;
+        
+                        $exists = $existingRecords->contains(function ($item) use ($factura_id, $numero) {
+                            return $item->factura_id == $factura_id && $item->numero == $numero;
+                        });
+        
+                        if (!$exists) {
+                            if (!isset($facturasMap[$factura_id])) {
+                                $facturasMap[$factura_id] = [
+                                    'factura_id' => $factura_id,
+                                    'num_cuotas' => 0, // Iniciar num_cuotas en 0
+                                    'saldo_pendiente' => 0,
+                                    'cliente_id' => $currentCliente['cliente_id'],
+                                    'fecha_factura' => $this->formatDate($row[5]),
+                                    'fecha_vencimiento' => null
+                                   
+                                ];
+                            }
+        
+                            // Incrementar num_cuotas y saldo_pendiente
+                            $facturasMap[$factura_id]['num_cuotas'] += 1;
+                            $facturasMap[$factura_id]['saldo_pendiente'] += $saldo_vencido;
+        
+                            if (is_null($facturasMap[$factura_id]['fecha_vencimiento']) || $numero > $facturasMap[$factura_id]['fecha_vencimiento']) {
+                                $facturasMap[$factura_id]['fecha_vencimiento'] = $this->formatDate($row[6]);
+                            }
+        
+                            $periodos[] = [
+                                'factura_id' => $factura_id,
+                                'numero' => $numero,
+                                'fecha_vencimiento' => $this->formatDate($row[6]),
+                                'monto' => $saldo_vencido
+                            ];
+                        }
+                    }
+                }
+        
+                if ($currentCliente && !in_array($currentCliente['cliente_id'], $existingClientes)) {
+                    $clientes[] = $currentCliente;
+                }
+        
+                $facturas = array_values($facturasMap);
+        
+                return view('import.preview', compact('clientes', 'facturas', 'periodos'))
+                    ->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
+            } catch (QueryException $e) {
+                return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
             }
         }
-
-        // Agregar el último cliente procesado si no está registrado
-        if ($currentCliente) {
-            if (!in_array($currentCliente['cliente_id'], $existingClientes)) {
-                $clientes[] = $currentCliente; // Solo agregar si no está en clientes existentes
-            }
-        }
-
-        // Convertir facturasMap a un array
-        $facturas = array_values($facturasMap);
-
-        // Retornar los datos a la vista
-        return view('import.preview', compact('clientes', 'facturas', 'periodos'))
-            ->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
-    } catch (QueryException $e) {
-        // Manejo genérico de excepciones
-        return redirect()->route('import.index')->with('error', 'Ocurrió un error al cargar el archivo, revise la integridad de datos.');
-    }
-}
-
+        
 
 /* 
 public function preview(Request $request)

@@ -88,6 +88,12 @@
                                 <button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#showFacturaModal{{$f->factura_id}}">
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                <button class="btn btn-success btn-sm ml-2" type="button" data-toggle="modal" data-target="#comentFacturaModal{{$f->factura_id}}">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+
+                                
+
                                 <button class="btn btn-warning btn-sm mx-2" type="button" data-toggle="modal" data-target="#editFacturaModal{{$f->factura_id}}">
                                     <i class="far fa-edit"></i>
                                 </button>

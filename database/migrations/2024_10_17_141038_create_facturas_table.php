@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('facturas', function (Blueprint $table) {
             $table->string('factura_id', 60)->primary();
             $table->date('fecha_factura');
+            $table->integer('num_cuotas')->default('0');;
             $table->decimal('saldo_pendiente', 10, 2);
             $table->string('concepto', 100)->nullable();
             $table->string('cliente_id', 60);
-            $table->char('carta_notarial', 1)->nullable()->nullable()->default('0');;
+            $table->char('carta_notarial', 1)->default('0');
             $table->date('fecha_vencimiento');
             $table->string('descripcion', 200)->nullable();
             $table->string('servicio', 200)->nullable();
-        
             $table->foreign('cliente_id')->references('cliente_id')->on('clientes');
             $table->timestamps();
         });

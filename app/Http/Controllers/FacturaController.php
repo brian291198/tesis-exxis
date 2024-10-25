@@ -16,7 +16,9 @@ class FacturaController extends Controller
     $numRecords = (int) $request->input('records');
     
     $buscarpor = trim($request->get('buscarpor'));
-    $facturas = Factura::with(['cliente']) // Suponiendo que tengas una relación con clientes
+    $facturas = Factura::with(['periodos' => function ($query) {
+        $query->orderBy('numero', 'asc'); // Ordena los periodos por número de cuota ascendente
+    }, 'cliente', 'comentariosFactura'])
         ->where(function ($query) use ($buscarpor) {
             $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
                   ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
@@ -40,17 +42,20 @@ public function index(Request $request)
     $totalFacturas = Factura::count();
     $buscarpor = trim($request->get('buscarpor'));
 
-    $facturas = Factura::with(['cliente']) // Relación con cliente
-        ->where(function ($query) use ($buscarpor) {
-            $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
-                  ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
-                  ->orWhere('servicio', 'LIKE', '%' . $buscarpor . '%')
-                  ->orWhere('cliente_id', 'LIKE', '%' . $buscarpor . '%');
-        })
-        ->paginate($numRecords);
+    $facturas = Factura::with(['periodos' => function ($query) {
+        $query->orderBy('numero', 'asc'); // Ordena los periodos por número de cuota ascendente
+    }, 'cliente', 'comentariosFactura'])
+    ->where(function ($query) use ($buscarpor) {
+        $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
+              ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
+              ->orWhere('servicio', 'LIKE', '%' . $buscarpor . '%')
+              ->orWhere('cliente_id', 'LIKE', '%' . $buscarpor . '%');
+    })
+    ->paginate($numRecords);
 
     return view('facturas.index', compact('buscarpor', 'facturas', 'totalFacturas', 'numRecords'));
 }
+
 
     
 
