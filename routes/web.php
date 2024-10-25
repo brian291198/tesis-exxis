@@ -122,3 +122,4 @@ Route::fallback(function () {
 });
 
 
+Route::get('/perfil', [UsuarioController::class, 'show'])->name('perfil')->middleware('auth');
