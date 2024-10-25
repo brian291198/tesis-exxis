@@ -1,7 +1,7 @@
-<form action="{{ route('facturas.coment') }}" method="POST">
+<form action="{{ route('periodos.coment') }}" method="POST">
     @csrf
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="comentFacturaModal{{$f->factura_id}}">
+    <div class="modal fade" tabindex="-1" role="dialog" id="comentPeriodoModal{{$p->periodo_id}}">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -14,7 +14,13 @@
                     <!-- Mostrar la factura_id -->
                     <div class="form-group">
                         <label for="factura_id">Factura ID:</label>
-                        <input type="text" id="factura_id" name="factura_id" class="form-control" readonly value="{{ $f->factura_id ?? '' }}" readonly>
+                        <input type="text" id="factura_id" name="factura_id" class="form-control" readonly value="{{ $p->factura->factura_id ?? '' }}" readonly>
+                    </div>
+
+                    <!-- Mostrar el periodo_id -->
+                    <div class="form-group">
+                        <label for="periodo_id">Periodo ID:</label>
+                        <input type="text" id="periodo_id" name="periodo_id" class="form-control" readonly value="{{ $p->periodo_id ?? '' }}" readonly>
                     </div>
 
                     <!-- Textarea para el comentario -->

@@ -27,34 +27,24 @@ Route::get('/register', function () {
 });
 
 
-/* Route::get('/pe', function () {
-  return view('admin.eliminar-plantilla');
-}); */
-
-
 Route::get('/tipocambio', [TipoCambioController::class, 'index'])->name('tipocambio.index');
 Route::post('/tipocambio/scrape', [TipoCambioController::class, 'scrape'])->name('tipocambio.scrape');
 
 Route::middleware(['auth'])->group(function () {
 
 
-  Route::get(' /img/jpconsultoria_logo.jpg', function () {
-    return redirect()->route('retornarHome');
-});
+    Route::get(' /img/jpconsultoria_logo.jpg', function () {
+        return redirect()->route('retornarHome');
+    });
 
-
-
-    Route::get('/home', [HomeController::class, 'retornarHome'])->name('retornarHome');
-    
-
- 
+    Route::get('/home', [HomeController::class, 'retornarHome'])->name('retornarHome');   
     Route::resource('usuarios', UsuarioController::class)->names('usuarios');
     Route::resource('roles',RolController::class)->names('roles');
 
 
 
 /* DASHBOARD */
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+      Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 /* CLIENTES */
 
@@ -77,18 +67,64 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
       Route::delete('clientes/destroy/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 /* FACTURAS */
+      // Listar una cantidad específica de facturas (POST /facturas/listpag)
+      Route::post('/facturas/listpag', [FacturaController::class, 'listpag'])->name('facturas.listpag');
+
+      // Listar todas las facturas (GET /facturas)
+      Route::get('/facturas/index', [FacturaController::class, 'index'])->name('facturas.index');
+
+      // Guardar una nueva factura (POST /facturas/store)
+      Route::post('/facturas/store', [FacturaController::class, 'store'])->name('facturas.store');
+
+      // Mostrar una factura específica (GET /facturas/{factura_id})
+      Route::get('facturas/show/{factura_id}', [FacturaController::class, 'show'])->name('facturas.show');
+
+      // Actualizar una factura (PUT/PATCH /facturas/{factura_id})
+      Route::patch('facturas/update/{factura_id}', [FacturaController::class, 'update'])->name('facturas.update');
+
+      // Eliminar una factura (DELETE /facturas/{factura_id})
+      Route::delete('facturas/destroy/{factura_id}', [FacturaController::class, 'destroy'])->name('facturas.destroy');
+
+      // Eliminar una factura (DELETE /facturas/{factura_id})
+      Route::post('facturas/coment', [FacturaController::class, 'coment'])->name('facturas.coment');
 
 
 /* PERIODOS */
+      // Listar una cantidad específica de periodos (POST /periodos/listpag)
+      Route::post('/periodos/listpag', [PeriodoController::class, 'listpag'])->name('periodos.listpag');
+
+      // Listar todos los periodos (GET /periodos)
+      Route::get('/periodos/index', [PeriodoController::class, 'index'])->name('periodos.index');
+
+      // Guardar un nuevo periodo (POST /periodos/store)
+      Route::post('/periodos/store', [PeriodoController::class, 'store'])->name('periodos.store');
+
+      // Mostrar un periodo específico (GET /periodos/{periodo_id})
+      Route::get('periodos/show/{periodo_id}', [PeriodoController::class, 'show'])->name('periodos.show');
+
+      // Actualizar un periodo (PUT/PATCH /periodos/{periodo_id})
+      Route::patch('periodos/update/{periodo_id}', [PeriodoController::class, 'update'])->name('periodos.update');
+
+      // Eliminar un periodo (DELETE /periodos/{periodo_id})
+      Route::delete('periodos/destroy/{periodo_id}', [PeriodoController::class, 'destroy'])->name('periodos.destroy');
+
+      // Agregar un comentario a un periodo (POST /periodos/coment)
+      Route::post('periodos/coment', [PeriodoController::class, 'coment'])->name('periodos.coment');
+
+
+
+
+
+
 
 
 
 
     Route::resource('asuntos', AsuntoNotificacionController::class);
-    Route::resource('tipo-cambio', TipoCambioController::class);
-    Route::resource('facturas', FacturaController::class);
+
+
     Route::resource('areas', AreaController::class);
-    Route::resource('periodos', PeriodoController::class);
+
     Route::resource('notificaciones', NotificacionController::class);
     Route::resource('archivos', ArchivoController::class);
     Route::resource('comentarios-factura', ComentFacturaController::class);
@@ -110,7 +146,7 @@ Route::post('/import/preview', [ImportExcel::class, 'preview'])->name('import.pr
 Route::post('/areas/listpag', [AreaController::class, 'listpag'])->name('areas.listpag');
 /* Route::post('/clientes/listpag', [ClienteController::class, 'listpag'])->name('clientes.listpag'); */
 /* Route::patch('/clientes/update/{cliente_id}', [ClienteController::class, 'update'])->name('clientes.update'); */
-Route::post('/facturas/listpag', [FacturaController::class, 'listpag'])->name('facturas.listpag');
+
 Route::post('/periodos/listpag', [PeriodoController::class, 'listpag'])->name('periodos.listpag');
 
 

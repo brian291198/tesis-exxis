@@ -4,10 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Models\Periodo;
 use App\Http\Controllers\Controller;
+use App\Models\ComentPeriodo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PeriodoController extends Controller
 {
+    public function coment(Request $request)
+    {
+        // Validar la entrada
+        $request->validate([
+            'description' => 'max:500',  // Validar que description sea requerido y sea una cadena con un máximo de 500 caracteres
+        ], [
+    
+            'description.max' => 'El comentario no puede ser demasiado extenso.',
+        ]);
+    
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+    
+        // Crear un nuevo comentario
+        ComentPeriodo::create([
+            'periodo_id' => $request->periodo_id,
+            'factura_id' => $request->factura_id,  // Asegúrate de que factura_id esté presente en la solicitud
+            'description' => $request->description,
+            'fecha' => now(),  // Guardar la fecha actual
+            'usuario' => $user->name,  // Guardar el nombre del usuario autenticado
+        ]);
+    
+        return redirect()->route('periodos.index')->with('success', 'Comentario guardado exitosamente.');
+    }
+    
 
     public function listpag(Request $request)
 {
@@ -15,7 +42,7 @@ class PeriodoController extends Controller
     $numRecords = (int) $request->input('records');
     
     $buscarpor = trim($request->get('buscarpor'));
-    $periodos = Periodo::with(['factura', 'area']) // Relaciones con factura y área
+    $periodos = Periodo::with(['factura', 'area', 'comentarios'])
         ->where(function ($query) use ($buscarpor) {
             $query->where('periodo_id', 'LIKE', '%' . $buscarpor . '%')
                   ->orWhere('status', 'LIKE', '%' . $buscarpor . '%')
@@ -39,7 +66,7 @@ public function index(Request $request)
     $totalPeriodos = Periodo::count();
     $buscarpor = trim($request->get('buscarpor'));
 
-    $periodos = Periodo::with(['factura', 'area']) // Relaciones con factura y área
+    $periodos = Periodo::with(['factura', 'area', 'comentarios'])
         ->where(function ($query) use ($buscarpor) {
             $query->where('periodo_id', 'LIKE', '%' . $buscarpor . '%')
                   ->orWhere('status', 'LIKE', '%' . $buscarpor . '%')

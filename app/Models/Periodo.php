@@ -34,4 +34,14 @@ class Periodo extends Model
     {
         return $this->hasMany(Archivo::class, ['periodo_id', 'factura_id', 'notificacion_id']);
     }
+    /* public function comentarios()
+    {
+        return $this->hasMany(ComentPeriodo::class, ['periodo_id', 'factura_id']);
+
+    } */
+    public function comentarios()
+    {
+        return $this->hasMany(ComentPeriodo::class, 'periodo_id', 'periodo_id')
+                    ->orderBy('com_periodo_id', 'desc'); // Asegúrate de que este nombre corresponda a la columna en ComentarioPeriodo
+    }
 }

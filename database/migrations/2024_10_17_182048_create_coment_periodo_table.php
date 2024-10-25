@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('usuario', 200);
             $table->date('fecha');
         
-            $table->foreign(['periodo_id', 'factura_id'])->references(['periodo_id', 'factura_id'])->on('periodos');
+            $table->foreign(['periodo_id', 'factura_id'])->references(['periodo_id', 'factura_id'])->on('periodos')->onDelete('cascade');;
             $table->timestamps();
         });
         

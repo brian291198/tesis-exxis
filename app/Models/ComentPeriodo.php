@@ -15,8 +15,14 @@ class ComentPeriodo extends Model
     public $timestamps = false;
     protected $fillable = ['periodo_id', 'factura_id', 'description', 'usuario', 'fecha'];
 
-    public function periodo()
+   /*  public function periodo()
     {
         return $this->belongsTo(Periodo::class, ['periodo_id', 'factura_id']);
+    }
+ */
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class, 'periodo_id', 'periodo_id')
+                    ->where('factura_id', $this->factura_id); // Asegúrate de que el 'factura_id' sea el correcto
     }
 }

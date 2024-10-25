@@ -4,12 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\Factura;
 use App\Models\Cliente;
-use App\Models\TipoCambio;
+use App\Models\ComentFactura;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FacturaController extends Controller
 {
+ 
+    public function coment(Request $request)
+{
+    // Validar la entrada
+    $request->validate([
+        'description' => 'max:500',  // Validar que description sea requerido y sea una cadena con un máximo de 500 caracteres
+    ], [
+
+        'description.max' => 'El comentario no puede ser demasiado extenso.',
+    ]);
+
+    // Obtener el usuario autenticado
+    $user = Auth::user();
+
+    // Crear un nuevo comentario
+    ComentFactura::create([
+        'factura_id' => $request->factura_id,  // Asegúrate de que factura_id esté presente en la solicitud
+        'description' => $request->description,
+        'fecha' => now(),  // Guardar la fecha actual
+        'usuario' => $user->name,  // Guardar el nombre del usuario autenticado
+    ]);
+
+    return redirect()->route('facturas.index')->with('success', 'Comentario guardado exitosamente.');
+}
+
+
     public function listpag(Request $request)
 {
     $totalFacturas = Factura::count();
@@ -18,7 +45,9 @@ class FacturaController extends Controller
     $buscarpor = trim($request->get('buscarpor'));
     $facturas = Factura::with(['periodos' => function ($query) {
         $query->orderBy('numero', 'asc'); // Ordena los periodos por número de cuota ascendente
-    }, 'cliente', 'comentariosFactura'])
+    }, 'cliente', 'comentariosFactura' => function ($query) {
+        $query->orderBy('com_factura_id', 'desc');
+    }])
         ->where(function ($query) use ($buscarpor) {
             $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
                   ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
@@ -44,7 +73,9 @@ public function index(Request $request)
 
     $facturas = Factura::with(['periodos' => function ($query) {
         $query->orderBy('numero', 'asc'); // Ordena los periodos por número de cuota ascendente
-    }, 'cliente', 'comentariosFactura'])
+    }, 'cliente', 'comentariosFactura' => function ($query) {
+        $query->orderBy('com_factura_id', 'desc');
+    }])
     ->where(function ($query) use ($buscarpor) {
         $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
               ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
@@ -104,7 +135,6 @@ public function index(Request $request)
     {
         $factura = Factura::findOrFail($id);
         $clientes = Cliente::all();
-        $tiposCambio = TipoCambio::all();
         return view('facturas.edit', compact('factura', 'clientes', 'tiposCambio'));
     }
 

@@ -91,9 +91,6 @@
                                 <button class="btn btn-success btn-sm ml-2" type="button" data-toggle="modal" data-target="#comentFacturaModal{{$f->factura_id}}">
                                     <i class="fas fa-comment"></i>
                                 </button>
-
-                                
-
                                 <button class="btn btn-warning btn-sm mx-2" type="button" data-toggle="modal" data-target="#editFacturaModal{{$f->factura_id}}">
                                     <i class="far fa-edit"></i>
                                 </button>
@@ -106,6 +103,7 @@
 
                             @include('facturas.modal.show')
                             @include('facturas.modal.edit')
+                            @include('facturas.modal.coment')
 
                        
                         </tr>

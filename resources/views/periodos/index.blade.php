@@ -21,13 +21,9 @@
 
 @section('content')
 
-@can('Crear períodos')
-<div class="mb-3 mt-1">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#createPeriodoModal">
-        <i class="bi bi-plus-circle-fill mr-2"></i>Crear nuevo período
-    </button>
-</div>
-@endcan
+
+
+
 
 @include('periodos.modal.create')
 
@@ -35,7 +31,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header" style="display: flex; flex-direction: column;">
-            <h2>Lista de Períodos</h2>
+            <h2>Lista de Cuotas</h2>
             <h5>Total: {{$totalPeriodos}}</h5>
         </div>
         <div class="card-body">
@@ -61,7 +57,7 @@
               <thead>                                 
                 <tr>
                     <th class="text-center">N°</th>
-                    <th>ID Período</th>
+                    <th>ID Cuota</th>
                     <th>Factura</th>
                     <th>Monto</th>
                     <th>Número</th>
@@ -118,6 +114,9 @@
                                 <button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#showPeriodoModal{{$p->periodo_id}}">
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                <button class="btn btn-success btn-sm ml-2" type="button" data-toggle="modal" data-target="#comentPeriodoModal{{$p->periodo_id}}">
+                                    <i class="fas fa-comment"></i>
+                                </button>
                                 <button class="btn btn-warning btn-sm mx-2" type="button" data-toggle="modal" data-target="#editPeriodoModal{{$p->periodo_id}}">
                                     <i class="far fa-edit"></i>
                                 </button>
@@ -130,6 +129,7 @@
 
                             @include('periodos.modal.show')
                             @include('periodos.modal.edit')
+                            @include('periodos.modal.coment')
 
                        
                         </tr>

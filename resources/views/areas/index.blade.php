@@ -90,7 +90,6 @@
               <thead>                                 
                 <tr>
                     <th  class="text-center">N°</th>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Acción</th>
                 </tr>
@@ -105,7 +104,6 @@
                 @foreach ($areas as $key => $a)
                     <tr class="text-center">
                         <td data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{($areas->currentPage() - 1) * $areas->perPage() + $loop->index + 1}}</td>
-                        <td data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{$a->area_id}} </td>
                         <td class="text-left" data-toggle="modal" data-target="#showAreaModal{{$a->area_id}}">{{$a->nombre}} </td>
    
                  
