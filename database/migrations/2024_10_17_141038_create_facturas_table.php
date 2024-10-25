@@ -17,14 +17,12 @@ return new class extends Migration
             $table->decimal('saldo_pendiente', 10, 2);
             $table->string('concepto', 100)->nullable();
             $table->string('cliente_id', 60);
-            $table->char('carta_notarial', 1)->nullable();
-            $table->unsignedBigInteger('tipo_id')->nullable();
+            $table->char('carta_notarial', 1)->nullable()->nullable()->default('0');;
             $table->date('fecha_vencimiento');
             $table->string('descripcion', 200)->nullable();
             $table->string('servicio', 200)->nullable();
         
             $table->foreign('cliente_id')->references('cliente_id')->on('clientes');
-            $table->foreign('tipo_id')->references('tipo_id')->on('tipo_cambio');
             $table->timestamps();
         });
         

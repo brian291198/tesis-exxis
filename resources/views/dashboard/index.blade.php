@@ -1,5 +1,5 @@
 @extends('admin.plantilla')
-@section('title','Dashboard de asesores')
+@section('title','Dashboard')
 
 @section('content')
 

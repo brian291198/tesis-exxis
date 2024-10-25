@@ -18,11 +18,6 @@ class Factura extends Model
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    public function tipoCambio()
-    {
-        return $this->belongsTo(TipoCambio::class, 'tipo_id');
-    }
-
     public function periodos()
     {
         return $this->hasMany(Periodo::class, 'factura_id');

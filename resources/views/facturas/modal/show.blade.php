@@ -11,11 +11,31 @@
                 <p><strong>ID de Factura:</strong> {{ $f->factura_id }}</p>
                 <p><strong>Fecha de Factura:</strong> {{ $f->fecha_factura }}</p>
                 <p><strong>Saldo Pendiente:</strong> {{ $f->saldo_pendiente }}</p>
-                <p><strong>ID del Cliente:</strong> {{ $f->cliente->nombre }}</p>
-                <p><strong>Concepto:</strong> {{ $f->concepto }}</p>
+                <p><strong>Nombre del Cliente:</strong> {{ $f->cliente->nombre }}</p>
+                <p><strong>Concepto:</strong> 
+                    @if ($f->concepto == null)
+                    No definido
+                    @else
+                    {{$f->tipo_cambio}}
+                    @endif
+                </p>
+                <p><strong>Tipo:</strong> 
+                    @if ($f->tipo_cambio  == null)
+                    No definido
+                    @else
+                    {{$f->tipo_cambio}}
+                    @endif
+                </p>
+                <p><strong>Carta Notarial:</strong> 
+                    @if ($f->cartanotarial == 1)
+                    <strong class="text-danger">En proceso</strong>
+                    @else
+                    <strong class="text-success">No tiene</strong>
+                    @endif
+                </p>
                 {{-- <p><strong>Tipo de Cambio ID:</strong> {{ $f->tipoCambio->valor }}</p> --}}
             </div>
-            <div class="modal-footer bg-whitesmoke br">
+            <div class="modal-footer bg-whitesmoke br justify-content-center">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

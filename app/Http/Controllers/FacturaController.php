@@ -11,36 +11,47 @@ use Illuminate\Http\Request;
 class FacturaController extends Controller
 {
     public function listpag(Request $request)
-    {
-        $numRecords = (int) $request->input('records');
+{
+    $totalFacturas = Factura::count();
+    $numRecords = (int) $request->input('records');
     
-        // Obtiene los clientes según la cantidad de registros solicitados
-        $buscarpor = trim($request->get('buscarpor'));
-        $facturas = Factura::where('factura_id', 'LIKE', '%' . $buscarpor . '%')->paginate($numRecords);
+    $buscarpor = trim($request->get('buscarpor'));
+    $facturas = Factura::with(['cliente']) // Suponiendo que tengas una relación con clientes
+        ->where(function ($query) use ($buscarpor) {
+            $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('servicio', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('cliente_id', 'LIKE', '%' . $buscarpor . '%');
+        })
+        ->paginate($numRecords);
 
-         // Redirige al método index con los parámetros de la paginación
     return redirect()->route('facturas.index', [
         'facturas' => $facturas,
         'records' => $numRecords, 
         'buscarpor' => $buscarpor
-    ]); 
-    }
-
-
-
-    public function index(Request $request)
-{
-    $numRecords = (int) $request->input('records',20);
-    $totalFacturas =Factura::count();
-    
-    
-    $buscarpor = trim($request->get('buscarpor'));
-    $facturas = Factura::with(['tipoCambio', 'cliente'])->where('factura_id', 'LIKE', '%' . $buscarpor . '%')->paginate($numRecords);
-
-// Retornar la vista con los clientes paginados
-/* dd($facturas); */
-return view('facturas.index', compact('buscarpor', 'facturas', 'totalFacturas', 'numRecords'));
+    ]);
 }
+
+
+
+public function index(Request $request)
+{
+    $numRecords = (int) $request->input('records', 20);
+    $totalFacturas = Factura::count();
+    $buscarpor = trim($request->get('buscarpor'));
+
+    $facturas = Factura::with(['cliente']) // Relación con cliente
+        ->where(function ($query) use ($buscarpor) {
+            $query->where('factura_id', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('concepto', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('servicio', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('cliente_id', 'LIKE', '%' . $buscarpor . '%');
+        })
+        ->paginate($numRecords);
+
+    return view('facturas.index', compact('buscarpor', 'facturas', 'totalFacturas', 'numRecords'));
+}
+
     
 
 

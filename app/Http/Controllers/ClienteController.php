@@ -22,8 +22,13 @@ class ClienteController extends Controller
     
         // Obtiene los clientes según la cantidad de registros solicitados
         $buscarpor = trim($request->get('buscarpor'));
-        $clientes = Cliente::with(['facturas'])->where('cliente_id', 'LIKE', '%' . $buscarpor . '%')->paginate($numRecords);
-    
+        $clientes = Cliente::with(['facturas'])
+        ->where(function ($query) use ($buscarpor) {
+            $query->where('cliente_id', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('nombre', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('ruc', 'LIKE', '%' . $buscarpor . '%');
+        })
+        ->paginate($numRecords);
          // Redirige al método index con los parámetros de la paginación
     return redirect()->route('clientes.index', [
         'clientes' => $clientes,

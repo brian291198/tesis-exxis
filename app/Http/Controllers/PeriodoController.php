@@ -10,38 +10,45 @@ class PeriodoController extends Controller
 {
 
     public function listpag(Request $request)
-    {
-        $totalPeriodos =Periodo::count();
- 
-        $numRecords = (int) $request->input('records');
+{
+    $totalPeriodos = Periodo::count();
+    $numRecords = (int) $request->input('records');
     
-        // Obtiene los periodos según la cantidad de registros solicitados
-        $buscarpor = trim($request->get('buscarpor'));
-    $periodos = Periodo::where('factura_id', 'LIKE', '%' . $buscarpor . '%')->paginate($numRecords);
-    
-         // Redirige al método index con los parámetros de la paginación
+    $buscarpor = trim($request->get('buscarpor'));
+    $periodos = Periodo::with(['factura', 'area']) // Relaciones con factura y área
+        ->where(function ($query) use ($buscarpor) {
+            $query->where('periodo_id', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('status', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('factura_id', 'LIKE', '%' . $buscarpor . '%');
+        })
+        ->paginate($numRecords);
+
     return redirect()->route('periodos.index', [
         'periodos' => $periodos,
         'records' => $numRecords, 
         'buscarpor' => $buscarpor
-    ]); 
-    }
+    ]);
+}
 
 
 
-    public function index(Request $request)
-    {
-        $numRecords = (int) $request->input('records',20);
-        $totalPeriodos =Periodo::count();
-        
-        
-        $buscarpor = trim($request->get('buscarpor'));
-    $periodos = Periodo::where('factura_id', 'LIKE', '%' . $buscarpor . '%')->paginate($numRecords);
-    /* dd($periodos); */
-    
-    // Retornar la vista con los periodos paginados
-    return view('periodos.index', compact('periodos', 'totalPeriodos', 'numRecords', 'buscarpor'));
-    }
+
+public function index(Request $request)
+{
+    $numRecords = (int) $request->input('records', 20);
+    $totalPeriodos = Periodo::count();
+    $buscarpor = trim($request->get('buscarpor'));
+
+    $periodos = Periodo::with(['factura', 'area']) // Relaciones con factura y área
+        ->where(function ($query) use ($buscarpor) {
+            $query->where('periodo_id', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('status', 'LIKE', '%' . $buscarpor . '%')
+                  ->orWhere('factura_id', 'LIKE', '%' . $buscarpor . '%');
+        })
+        ->paginate($numRecords);
+
+    return view('periodos.index', compact('buscarpor', 'periodos', 'totalPeriodos', 'numRecords'));
+}
 
 
 

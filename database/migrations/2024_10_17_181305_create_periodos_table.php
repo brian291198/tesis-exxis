@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('periodo_id'); // Utiliza AUTO_INCREMENT automáticamente
             $table->decimal('monto', 10, 2);
             $table->integer('numero');
+            $table->decimal('tipo_cambio', 10, 2)->nullable();
             $table->date('fecha_vencimiento')->notNullable();
             $table->string('status', 30)->nullable();
             $table->unsignedBigInteger('area_id')->nullable();
