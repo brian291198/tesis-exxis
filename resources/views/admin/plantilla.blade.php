@@ -80,7 +80,8 @@
              
               <form id="logout-form" action="{{ route('logout') }}" method="POST" >
                 @csrf
-                <button class="dropdown-item has-icon text-danger logout-button"><i class="fas fa-sign-out-alt"></i>Salir</button>
+                {{-- <button class="dropdown-item has-icon text-danger logout-button"><i class="fas fa-sign-out-alt"></i>Salir</button> --}}
+                <a href="javascript:void(0)" onclick="document.getElementById('logout-form').submit();" class="dropdown-item has-icon text-danger"><i class="fas fa-sign-out-alt mr-2"></i>Salir</a>
                   
             </form>
             </div>

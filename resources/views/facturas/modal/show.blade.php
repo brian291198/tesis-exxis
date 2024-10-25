@@ -14,14 +14,14 @@
                 <p><strong>Nombre del Cliente:</strong> {{ $f->cliente->nombre }}</p>
                 <p><strong>Concepto:</strong> 
                     @if ($f->concepto == null)
-                    No definido
+                    <strong class="text-danger">No definido</strong>
                     @else
                     {{$f->tipo_cambio}}
                     @endif
                 </p>
                 <p><strong>Tipo:</strong> 
                     @if ($f->tipo_cambio  == null)
-                    No definido
+                    <strong class="text-danger">No definido</strong>
                     @else
                     {{$f->tipo_cambio}}
                     @endif

@@ -12,6 +12,7 @@
 
                 <p><strong>ID Período:</strong> {{ $p->periodo_id }}</p>
                 <p><strong>Factura:</strong> {{ $p->factura_id }}</p>
+                <p><strong>Cliente:</strong> {{ $p->factura->cliente->nombre }}</p>
                 <p><strong>Monto:</strong> {{ $p->monto }}</p>
                 <p><strong>Número:</strong> {{ $p->numero }}</p>
                 <p><strong>Tipo de Cambio:</strong>
