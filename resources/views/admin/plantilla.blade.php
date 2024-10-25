@@ -67,7 +67,7 @@
                 {{ $role->name }}
                 @endforeach
               </div>
-              <a href="features-profile.html" class="dropdown-item has-icon">
+              <a href="{{ route('perfil') }}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Perfil
               </a>
              {{--  <a href="features-activities.html" class="dropdown-item has-icon">
@@ -92,7 +92,7 @@
       <div class="main-sidebar sidebar-style-2">
         <aside id="sidebar-wrapper">|
           <div class="sidebar-brand">
-            <a href="index.html">EXXIS GROUP</a>
+            <a href="{{ route('retornarHome') }}">EXXIS GROUP</a>
           </div>
           <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">EXXIS</a>

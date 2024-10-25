@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 //Agregamos
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -114,9 +115,14 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $usuario = [
+            'nombre' => Auth::user()->name,
+            'email' => Auth::user()->email,
+        ];
+
+        return view('usuarios.perfil', compact('usuario'));
     }
 
     /**
